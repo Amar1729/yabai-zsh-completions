@@ -27,7 +27,22 @@ function __dir_sel {
 }
 
 function __window_sel {
-    echo "prev next first last recent mouse largest smallest $(__dir_sel) $(__yabai_windows)"
+    arr=(
+        "prev"
+        "next"
+        "first"
+        "last"
+        "recent"
+        "mouse"
+        "largest"
+        "smallest"
+        "$(__dir_sel)"
+    )
+    while read -r line || [[ -n $line ]]; do
+        arr+="'$line'"
+    done <<< $(yabai -m query --windows | jq -r '.[] | @text "\(.id):\(.app) - \(.title)"')
+
+    _describe -t 'windows' windows "($arr)"
 }
 
 function __display_sel {
@@ -55,10 +70,6 @@ function __yabai_displays {
 
 function __yabai_spaces {
     echo $(yabai -m query --spaces | jq -r '.[] | .index')
-}
-
-function __yabai_windows {
-    echo $(yabai -m query --windows | jq -r '.[] | .id')
 }
 
 # ---- tiling ----
@@ -196,6 +207,33 @@ function _yabai_space {
     esac
 }
 
+function _yabai_window_inner {
+    idx=$1
+    case $line[$idx] in
+        --focus|--swap|--warp)
+            _arguments "$idx: :($(__window_sel))"
+            ;;
+        --insert)
+            _arguments "$idx: :($(__dir_sel))"
+            ;;
+        --resize)
+            _arguments "$idx: :(top: left: bottom: right: top_left: top_right: bottom_right: bottom_left: abs:)"
+            ;;
+        --toggle)
+            _arguments "$idx: :(float sticky topmost pip shadow split border zoom-parent zoom-fullscreen native-fullscreen expose)"
+            ;;
+        --layer)
+            _arguments "$idx: :($(__layer))"
+            ;;
+        --display)
+            _arguments "$idx: :($(__display_sel))"
+            ;;
+        --space)
+            _arguments "$idx: :($(__space_sel))"
+            ;;
+    esac
+}
+
 function _yabai_window {
     args=(
         "--focus\:'Focus the given window.'"
@@ -213,31 +251,20 @@ function _yabai_window {
         "--close\:'Closes the selected window. Only works on windows that provide a close button in its titlebar.'"
     )
 
+    _arguments "2: :__window_sel"
     _arguments "2: :(($args))"
 
     case $line[3] in
-        --focus|--swap|--warp)
-            _arguments "3: :($(__window_sel))"
+        --focus|--swap|--warp|--insert|--grid|--move|--resize|--ratio|--toggle|--layer|--display|--space|--close)
+            _yabai_window_inner 3
             ;;
-        --insert)
-            _arguments "3: :($(__dir_sel))"
-            ;;
-        --resize)
-            _arguments "3: :(top: left: bottom: right: top_left: top_right: bottom_right: bottom_left: abs:)"
-            ;;
-        --toggle)
-            _arguments "3: :(float sticky topmost pip shadow split border zoom-parent zoom-fullscreen native-fullscreen expose)"
-            ;;
-        --layer)
-            _arguments "3: :($(__layer))"
-            ;;
-        --display)
-            _arguments "3: :($(__display_sel))"
-            ;;
-        --space)
-            _arguments "3: :($(__space_sel))"
+        *)
+            _arguments "3: :(($args))"
+
+            _yabai_window_inner 4
             ;;
     esac
+
 }
 
 function _yabai_query {
