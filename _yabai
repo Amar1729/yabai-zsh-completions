@@ -296,6 +296,53 @@ function _yabai_rule {
 }
 
 function _yabai_signal {
+    _arguments "2: :((--add --remove))"
+
+    if [[ $line[3] == "--add" ]]; then
+        events=(
+            "application_launched"
+            "application_terminated"
+            "application_front_switched"
+            "application_activated"
+            "application_deactivated"
+            "application_visible"
+            "application_hidden"
+            "window_created"
+            "window_destroyed"
+            "window_focused"
+            "window_moved"
+            "window_resized"
+            "window_minimized"
+            "window_deminimized"
+            "window_title_changed"
+            "space_changed"
+            "display_added"
+            "display_removed"
+            "display_moved"
+            "display_resized"
+            "display_changed"
+            "mouse_down"
+            "mouse_up"
+            "mouse_dragged"
+            "mouse_moved"
+            "mission_control_enter"
+            "mission_control_check_for_exit"
+            "mission_control_exit"
+            "dock_did_restart"
+            "menu_opened"
+            "menu_bar_hidden_changed"
+            "dock_did_change_pref"
+            "system_woke"
+            "bar_refresh"
+            "daemon_message"
+        )
+
+        # not going to offer completions for anything but events
+        # TODO - these should each be offered only once
+        _arguments "*: :(action= label= app= title=)"
+        # TODO - this completion for 'event' initially completes it as 'event\='
+        _arguments "*: :_sep_parts '(event)' = '($events)'"
+    fi
 }
 
 function _yabai {
