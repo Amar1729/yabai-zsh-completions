@@ -121,7 +121,7 @@ function _yabai_config {
         "window_gap\:'Size of the gap that separates windows for the selected space.'"
     )
 
-    _arguments "2: :((--space $args_global))"
+    _arguments "2: :((--space\:'Get or set the value of <space setting>.' $args_global))"
 
 
     case $line[3] in
