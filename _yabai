@@ -211,7 +211,7 @@ function _yabai_window_inner {
     idx=$1
     case $line[$idx] in
         --focus|--swap|--warp)
-            _arguments "$idx: :($(__window_sel))"
+            _arguments "$idx: :__window_sel"
             ;;
         --insert)
             _arguments "$idx: :($(__dir_sel))"
