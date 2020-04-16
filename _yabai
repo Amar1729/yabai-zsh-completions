@@ -1,0 +1,323 @@
+#compdef yabai
+
+# ---- selectors ----
+
+# DIR_SEL     := north | east | south | west
+# 
+# WINDOW_SEL  := prev | next | first | last | recent | mouse | largest | smallest | DIR_SEL | window id
+# 
+# DISPLAY_SEL := prev | next | first | last | recent | arrangement index (1-based)
+# 
+# SPACE_SEL   := prev | next | first | last | recent | mission-control index (1-based) | LABEL
+# 
+# LAYER       := below | normal | above
+# 
+# FLOAT_SEL   := 0 < value <= 1.0
+# 
+# BOOL_SEL    := on | off
+# 
+# COLOR       := #AARRGGBB
+# 
+# REGEX       := POSIX extended regular expression syntax
+# 
+# LABEL       := arbitrary string/text used as an identifier
+
+function __dir_sel {
+    echo "north east south west"
+}
+
+function __window_sel {
+    echo "prev next first last recent mouse largest smallest $(__dir_sel) $(__yabai_windows)"
+}
+
+function __display_sel {
+    echo "prev next first last recent $(__yabai_displays)"
+}
+
+function __space_sel {
+    echo "prev next first last recent $(__yabai_spaces)"
+}
+
+function __layer {
+    echo "below normal above"
+}
+
+function __bool_sel {
+    echo "on off"
+}
+
+# ---- utility functions ----
+# query displays, spaces, windows for completions
+
+function __yabai_displays {
+    echo $(yabai -m query --displays | jq -r '.[] | .index')
+}
+
+function __yabai_spaces {
+    echo $(yabai -m query --spaces | jq -r '.[] | .index')
+}
+
+function __yabai_windows {
+    echo $(yabai -m query --windows | jq -r '.[] | .id')
+}
+
+# ---- tiling ----
+# - window subcmds can get kind of complicated
+# - desktop, monitor, and query are fairly simple
+
+function _yabai_config {
+    args_global=(
+        "debug_output\:'Enable output of debug information to stdout.'"
+        "status_bar\:'Enable custom status bar.'"
+        "status_bar_text_font\:'Specify name, style and size of font to use for drawing text. +'"
+        "status_bar_icon_font\:'Specify name, style and size of font to use for drawing icon symbols. +'"
+        "status_bar_background_color\:'Color to use for drawing status bar background.'"
+        "status_bar_foreground_color\:'Color to use for drawing status bar elements.'"
+        "status_bar_space_icon_strip\:'Specify symbols separated by whitespace to be used for visualizing spaces.'"
+        "status_bar_power_icon_strip\:'Specify two symbols separated by whitespace. +'"
+        "status_bar_space_icon\:'Specify a general symbol to use for any given space that does not have a match in 'status_bar_space_icon_strip'.'"
+        "status_bar_clock_icon\:'Specify a symbol to represent the current time.'"
+        "mouse_follows_focus\:'When focusing a window, put the mouse at its center.'"
+        "focus_follows_mouse\:'Automatically focus the window under the mouse.'"
+        "window_placement\:'Specify whether managed windows should become the first or second leaf-node.'"
+        "window_topmost\:'Make floating windows stay on top.'"
+        "window_opacity\:'Enable opacity for windows.'"
+        "window_opacity_duration\:'Duration of transition between active / normal opacity.'"
+        "window_shadow\:'Draw shadow for windows.'"
+        "window_border\:'Draw border for windows.'"
+        "window_border_placement\:'Position/draw-mode of window border.'"
+        "window_border_width\:'Width of window borders.'"
+        "window_border_radius\:'Radius of window border corners.'"
+        "active_window_border_topmost\:'Make the active border stay on top of other windows.'"
+        "active_window_border_color\:'Color of the border of the focused window.'"
+        "normal_window_border_color\:'Color of the border of an unfocused window.'"
+        "insert_window_border_color\:'Color of the *window --insert* message selection.'"
+        "active_window_opacity\:'Opacity of the focused window.'"
+        "normal_window_opacity\:'Opacity of an unfocused window.'"
+        "split_ratio\:'Default split ratio.'"
+        "auto_balance\:'Balance the window tree upon change, so that all windows occupy the same area.'"
+        "mouse_modifier\:'Keyboard modifier used for moving and resizing windows.'"
+        "mouse_action1\:'Action performed when pressing 'mouse_modifier' + 'button1'.'"
+        "mouse_action2\:'Action performed when pressing 'mouse_modifier' + 'button2'.'"
+    )
+
+    args_space=(
+        "layout\:'Set the layout of the selected space.'"
+        "top_padding\:'Padding added at the upper side of the selected space.'"
+        "bottom_padding\:'Padding added at the lower side of the selected space.'"
+        "left_padding\:'Padding added at the left side of the selected space.'"
+        "right_padding\:'Padding added at the right side of the selected space.'"
+        "window_gap\:'Size of the gap that separates windows for the selected space.'"
+    )
+
+    _arguments "2: :((--space $args_global))"
+
+
+    case $line[3] in
+        debug_output|status_bar|mouse_follows_focus|window_topmost|window_opacity|window_border|active_window_border_topmost|auto_balance)
+            _arguments "3: :(on off)"
+            ;;
+        focus_follows_mouse)
+            _arguments "3: :(autofocus autoraise off)"
+            ;;
+        window_placement)
+            _arguments "3: :(first_child second_child)"
+            ;;
+        window_border_placement)
+            _arguments "3: :(exterior interior inset)"
+            ;;
+        mouse_modifier)
+            _arguments "3: :(cmd alt shift ctrl fn)"
+            ;;
+        mouse_action1|mouse_action2)
+            _arguments "3: :(move resize)"
+            ;;
+        --space)
+        # if [[ $line[3] == "--space" ]]; then
+            _arguments "3: :($(__space_sel))"
+            _arguments "4: :(($args_space))"
+
+            if [[ $line[5] == "layout" ]]; then
+                _arguments "5: :(bsp float)"
+            fi
+        # fi
+        ;;
+    esac
+}
+
+function _yabai_display {
+    args=(
+        "--focus\:'focus a display'"
+    )
+
+    _arguments "2: :(($args))"
+    _arguments "3: :($(__display_sel))"
+}
+
+function _yabai_space {
+    args=(
+        "--focus\:'Focus the given space.'"
+        "--create\:'Create a new space on the display of the selected space.'"
+        "--destroy\:'Remove the selected space.'"
+        "--move\:'Move position of the selected space to the position of the given space. +'"
+        "--swap\:'Swap the selected space with the given space. +'"
+        "--display\:'Send the selected space to the given display.'"
+        "--balance\:'Adjust the split ratios of the selected space so that all windows occupy the same area.'"
+        "--mirror\:'Flip the tree of the selected space.'"
+        "--rotate\:'Rotate the tree of the selected space.'"
+        "--padding\:'Padding added at the sides of the selected space.'"
+        "--gap\:'Size of the gap that separates windows on the selected space.'"
+        "--toggle\:'Toggle space setting on or off for the selected space.'"
+        "--layout\:'Set the layout of the selected space.'"
+        "--label\:'Label the selected space, allowing that label to be used as an alias in commands that take a SPACE_SEL parameter.'"
+    )
+
+    _arguments "2: :(($args))"
+
+    case $line[3] in
+        --focus|--move|--swap)
+            _arguments "3: :($(__space_sel))"
+            ;;
+        --display)
+            _arguments "3: :($(__display_sel))"
+            ;;
+        --mirror)
+            _arguments "3: :(x-axis y-axis)"
+            ;;
+        --rotate)
+            _arguments "3: :(90 180 270)"
+            ;;
+        --toggle)
+            _arguments "3: :(padding gap mission-control show-desktop)"
+            ;;
+        --layout)
+            _arguments "3: :(bsp float)"
+            ;;
+    esac
+}
+
+function _yabai_window {
+    args=(
+        "--focus\:'Focus the given window.'"
+        "--swap\:'Swap position of the selected window and the given window.'"
+        "--warp\:'Re-insert the selected window, splitting the given window.'"
+        "--insert\:'Set the splitting area of the selected window. +'"
+        "--grid\:'Set the frame of the selected window based on a self-defined grid.'"
+        "--move\:'If type is 'rel' the selected window is moved by 'dx' pixels horizontally and 'dy' pixels vertically, otherwise 'dx' and 'dy' will become its new position.'"
+        "--resize\:'Resize the selected window by moving the given handle 'dx' pixels horizontally and 'dy' pixels vertically. If handle is 'abs' the new size will be 'dx' width and 'dy' height.'"
+        "--ratio\:'If type is 'rel' the split ratio of the selected window is changed by 'dr', otherwise 'dr' will become the new split ratio. A positive/negative delta will increase/decrease the size of the left-child.'"
+        "--toggle\:'Toggle the given property of the selected window.'"
+        "--layer\:'Set the stacking layer of the selected window.'"
+        "--display\:'Send the selected window to the given display.'"
+        "--space\:'Send the selected window to the given space.'"
+        "--close\:'Closes the selected window. Only works on windows that provide a close button in its titlebar.'"
+    )
+
+    _arguments "2: :(($args))"
+
+    case $line[3] in
+        --focus|--swap|--warp)
+            _arguments "3: :($(__window_sel))"
+            ;;
+        --insert)
+            _arguments "3: :($(__dir_sel))"
+            ;;
+        --resize)
+            _arguments "3: :(top: left: bottom: right: top_left: top_right: bottom_right: bottom_left: abs:)"
+            ;;
+        --toggle)
+            _arguments "3: :(float sticky topmost pip shadow split border zoom-parent zoom-fullscreen native-fullscreen expose)"
+            ;;
+        --layer)
+            _arguments "3: :($(__layer))"
+            ;;
+        --display)
+            _arguments "3: :($(__display_sel))"
+            ;;
+        --space)
+            _arguments "3: :($(__space_sel))"
+            ;;
+    esac
+}
+
+function _yabai_query {
+    args2=(
+        "--displays\:'Retrieve information about displays.'"
+        "--spaces\:'Retrieve information about spaces.'"
+        "--windows\:'Retrieve information about windows.'"
+    )
+
+    args3=(
+        "--display\:'Constrain matches to the selected display.'"
+        "--space\:'Constrain matches to the selected space.'"
+        "--window\:'Constrain matches to the selected window.'"
+    )
+
+    _arguments "2: :(($args2))"
+    _arguments "3: :(($args3))"
+
+    __type_sel="__${line[4]#--}_sel"
+
+    if ! (( ${+functions[$__type_sel]} )); then
+        _message "No completions provided for given yabai command"
+    else
+        _arguments "4: :($($__type_sel))"
+    fi
+}
+
+function _yabai_rule {
+}
+
+function _yabai_signal {
+}
+
+function _yabai {
+    local  curcontext="$curcontext" state state_descr line
+    typeset -A opt_args
+
+    if ! command -v jq >/dev/null; then
+        echo "'jq' not installed (required for parsing yabai output)."
+        return 1
+    fi
+
+    args=(
+        "-v[version]"
+        "-V[verbose]"
+        # "-m[message]: :(config display space window query rule signal)"
+        "-m[send a message to yabai]: :"
+        # {-c,--config}'[config file]: :_files'
+        {-c,--config}'[config file]: :'
+        "--install-sa[install SA]"
+        "--uninstall-sa[uninstall SA]"
+        "--check-sa[check SA]"
+        "--load-sa[load SA]"
+    )
+
+    if [[ ${#words[@]} -lt 3 ]]; then
+        # _arguments - "(commands)" $args && ret=0
+        _arguments - "commands" $args && ret=0
+    fi
+
+    _arguments -C \
+        "*::options:->options"
+
+    case "$line[1]" in
+        "-c"|"--config")
+            _arguments "1: :_files"
+            ;;
+        "-m")
+            # "-m[message]: :(config display space window query rule signal)"
+            _arguments "1: :(config display space window query rule signal)"
+
+            yabai_cmd="_yabai_$line[2]"
+
+            if ! (( ${+functions[$yabai_cmd]} )); then
+                _message "No completions provided for given chunkc command"
+            else
+                $yabai_cmd
+            fi
+            ;;
+    esac
+}
+
+_yabai "$@"
