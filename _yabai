@@ -79,37 +79,27 @@ function __yabai_spaces {
 function _yabai_config {
     args_global=(
         "debug_output\:'Enable output of debug information to stdout.'"
-        "status_bar\:'Enable custom status bar.'"
-        "status_bar_text_font\:'Specify name, style and size of font to use for drawing text. +'"
-        "status_bar_icon_font\:'Specify name, style and size of font to use for drawing icon symbols. +'"
-        "status_bar_background_color\:'Color to use for drawing status bar background.'"
-        "status_bar_foreground_color\:'Color to use for drawing status bar elements.'"
-        "status_bar_space_icon_strip\:'Specify symbols separated by whitespace to be used for visualizing spaces.'"
-        "status_bar_power_icon_strip\:'Specify two symbols separated by whitespace. +'"
-        "status_bar_space_icon\:'Specify a general symbol to use for any given space that does not have a match in 'status_bar_space_icon_strip'.'"
-        "status_bar_clock_icon\:'Specify a symbol to represent the current time.'"
+        "external_bar\:'Specify top and bottom padding for a potential custom bar that you may be running.'"
         "mouse_follows_focus\:'When focusing a window, put the mouse at its center.'"
         "focus_follows_mouse\:'Automatically focus the window under the mouse.'"
         "window_placement\:'Specify whether managed windows should become the first or second leaf-node.'"
         "window_topmost\:'Make floating windows stay on top.'"
+        "window_shadow\:'Draw shadow for windows.'"
         "window_opacity\:'Enable opacity for windows.'"
         "window_opacity_duration\:'Duration of transition between active / normal opacity.'"
-        "window_shadow\:'Draw shadow for windows.'"
-        "window_border\:'Draw border for windows.'"
-        "window_border_placement\:'Position/draw-mode of window border.'"
-        "window_border_width\:'Width of window borders.'"
-        "window_border_radius\:'Radius of window border corners.'"
-        "active_window_border_topmost\:'Make the active border stay on top of other windows.'"
-        "active_window_border_color\:'Color of the border of the focused window.'"
-        "normal_window_border_color\:'Color of the border of an unfocused window.'"
-        "insert_window_border_color\:'Color of the *window --insert* message selection.'"
         "active_window_opacity\:'Opacity of the focused window.'"
         "normal_window_opacity\:'Opacity of an unfocused window.'"
+        "window_border\:'Draw border for windows.'"
+        "window_border_width\:'Width of window borders.'"
+        "active_window_border_color\:'Color of the border of the focused window.'"
+        "normal_window_border_color\:'Color of the border of an unfocused window.'"
+        "insert_feedback_color\:'Color of the *window --insert* message selection.'"
         "split_ratio\:'Default split ratio.'"
         "auto_balance\:'Balance the window tree upon change, so that all windows occupy the same area.'"
         "mouse_modifier\:'Keyboard modifier used for moving and resizing windows.'"
         "mouse_action1\:'Action performed when pressing 'mouse_modifier' + 'button1'.'"
         "mouse_action2\:'Action performed when pressing 'mouse_modifier' + 'button2'.'"
+        "mouse_drop_action\:'Action performed when a bsp-managed window is dropped in the center of some other bsp-managed window.'"
     )
 
     args_space=(
@@ -125,8 +115,11 @@ function _yabai_config {
 
 
     case $line[3] in
-        debug_output|status_bar|mouse_follows_focus|window_topmost|window_opacity|window_border|active_window_border_topmost|auto_balance)
+        debug_output|mouse_follows_focus|window_topmost|window_shadow|window_opacity|window_border|auto_balance)
             _arguments "3: :(on off)"
+            ;;
+        external_bar)
+            _arguments "3: :(main: all: off:)"
             ;;
         focus_follows_mouse)
             _arguments "3: :(autofocus autoraise off)"
@@ -134,14 +127,14 @@ function _yabai_config {
         window_placement)
             _arguments "3: :(first_child second_child)"
             ;;
-        window_border_placement)
-            _arguments "3: :(exterior interior inset)"
-            ;;
         mouse_modifier)
             _arguments "3: :(cmd alt shift ctrl fn)"
             ;;
         mouse_action1|mouse_action2)
             _arguments "3: :(move resize)"
+            ;;
+        mouse_drop_action)
+            _arguments "3: :(swap stack)"
             ;;
         --space)
         # if [[ $line[3] == "--space" ]]; then
