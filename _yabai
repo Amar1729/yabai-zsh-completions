@@ -72,6 +72,18 @@ function __yabai_spaces {
     echo $(yabai -m query --spaces | jq -r '.[] | .index')
 }
 
+function __yabai_signals {
+    arr=()
+
+    # possible TODO: add 'action' parts to description of each index
+    # (note - i attempted this but it's a huge pain with quote escaping)
+    while read -r line || [[ -n $line ]]; do
+        arr+="'$line'"
+    done <<< $(yabai -m signal --list | jq -r '.[] | @text "\(.index):\(.event) (label\\: \(.label))"')
+
+    _describe -t 'signals' signals "($arr)"
+}
+
 # ---- tiling ----
 # - window subcmds can get kind of complicated
 # - desktop, monitor, and query are fairly simple
@@ -289,7 +301,7 @@ function _yabai_rule {
 }
 
 function _yabai_signal {
-    _arguments "2: :((--add --remove))"
+    _arguments "2: :((--add --remove --list))"
 
     if [[ $line[3] == "--add" ]]; then
         events=(
@@ -335,6 +347,8 @@ function _yabai_signal {
         _arguments "*: :(action= label= app= title=)"
         # TODO - this completion for 'event' initially completes it as 'event\='
         _arguments "*: :_sep_parts '(event)' = '($events)'"
+    elif [[ $line[3] == "--remove" ]]; then
+        _arguments "3: :__yabai_signals"
     fi
 }
 
