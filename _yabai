@@ -8,9 +8,9 @@
 #
 # STACK_SEL   := stack.prev | stack.next | stack.first | stack.last | stack.recent
 # 
-# DISPLAY_SEL := prev | next | first | last | recent | arrangement index (1-based)
+# DISPLAY_SEL := prev | next | first | last | recent | mouse | arrangement index (1-based)
 # 
-# SPACE_SEL   := prev | next | first | last | recent | mission-control index (1-based) | LABEL
+# SPACE_SEL   := prev | next | first | last | recent | mouse | mission-control index (1-based) | LABEL
 # 
 # LAYER       := below | normal | above
 # 
@@ -48,11 +48,11 @@ function __window_sel {
 }
 
 function __display_sel {
-    echo "prev next first last recent $(__yabai_displays)"
+    echo "prev next first last recent mouse $(__yabai_displays)"
 }
 
 function __space_sel {
-    echo "prev next first last recent $(__yabai_spaces)"
+    echo "prev next first last recent mouse $(__yabai_spaces)"
 }
 
 function __layer {
