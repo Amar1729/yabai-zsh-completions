@@ -28,6 +28,10 @@ function __dir_sel {
     echo "north east south west"
 }
 
+function __stack_sel {
+    _arguments "*: :_sep_parts '(stack)' . '(prev next first last recent)'"
+}
+
 function __window_sel {
     arr=(
         "prev"
@@ -219,6 +223,7 @@ function _yabai_window_inner {
     case $line[$idx] in
         --focus|--swap|--warp|--stack)
             _arguments "$idx: :__window_sel"
+            _arguments "$idx: :__stack_sel"
             ;;
         --insert)
             _arguments "$idx: :($(__dir_sel) stack)"
@@ -259,6 +264,7 @@ function _yabai_window {
     )
 
     _arguments "2: :__window_sel"
+    _arguments "2: :__stack_sel"
     _arguments "2: :(($args))"
 
     case $line[3] in
