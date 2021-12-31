@@ -4,11 +4,13 @@
 
 # DIR_SEL     := north | east | south | west
 # 
-# WINDOW_SEL  := prev | next | first | last | recent | mouse | largest | smallest | DIR_SEL | window id
+# WINDOW_SEL  := prev | next | first | last | recent | mouse | largest | smallest | STACK_SEL | DIR_SEL | window id
+#
+# STACK_SEL   := stack.prev | stack.next | stack.first | stack.last | stack.recent
 # 
-# DISPLAY_SEL := prev | next | first | last | recent | arrangement index (1-based)
+# DISPLAY_SEL := prev | next | first | last | recent | mouse | arrangement index (1-based)
 # 
-# SPACE_SEL   := prev | next | first | last | recent | mission-control index (1-based) | LABEL
+# SPACE_SEL   := prev | next | first | last | recent | mouse | mission-control index (1-based) | LABEL
 # 
 # LAYER       := below | normal | above
 # 
@@ -46,11 +48,11 @@ function __window_sel {
 }
 
 function __display_sel {
-    echo "prev next first last recent $(__yabai_displays)"
+    echo "prev next first last recent mouse $(__yabai_displays)"
 }
 
 function __space_sel {
-    echo "prev next first last recent $(__yabai_spaces)"
+    echo "prev next first last recent mouse $(__yabai_spaces)"
 }
 
 function __layer {
@@ -154,7 +156,7 @@ function _yabai_config {
             _arguments "4: :(($args_space))"
 
             if [[ $line[5] == "layout" ]]; then
-                _arguments "5: :(bsp float)"
+                _arguments "5: :(bsp float stack)"
             fi
         # fi
         ;;
@@ -207,7 +209,7 @@ function _yabai_space {
             _arguments "3: :(padding gap mission-control show-desktop)"
             ;;
         --layout)
-            _arguments "3: :(bsp float)"
+            _arguments "3: :(bsp float stack)"
             ;;
     esac
 }
@@ -215,11 +217,11 @@ function _yabai_space {
 function _yabai_window_inner {
     idx=$1
     case $line[$idx] in
-        --focus|--swap|--warp)
+        --focus|--swap|--warp|--stack)
             _arguments "$idx: :__window_sel"
             ;;
         --insert)
-            _arguments "$idx: :($(__dir_sel))"
+            _arguments "$idx: :($(__dir_sel) stack)"
             ;;
         --resize)
             _arguments "$idx: :(top: left: bottom: right: top_left: top_right: bottom_right: bottom_left: abs:)"
