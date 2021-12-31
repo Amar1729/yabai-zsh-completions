@@ -401,7 +401,7 @@ function _yabai {
             yabai_cmd="_yabai_$line[2]"
 
             if ! (( ${+functions[$yabai_cmd]} )); then
-                _message "No completions provided for given chunkc command"
+                _message "No completions provided for given yabai command"
             else
                 $yabai_cmd
             fi
