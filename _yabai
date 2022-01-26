@@ -45,7 +45,10 @@ function __window_sel {
         "$(__dir_sel)"
     )
     while read -r line || [[ -n $line ]]; do
-        arr+="'$line'"
+        w_id="${line%%:*}"
+        w_desc="${line#*:}"
+        abbrev_line=$(echo "$w_desc" | tr -dc '[a-zA-Z0-9-/ ]' | tr -s ' ')
+        arr+="'${w_id}:${abbrev_line}'"
     done <<< $(yabai -m query --windows | jq -r '.[] | @text "\(.id):\(.app) - \(.title)"')
 
     _describe -t 'windows' windows "($arr)"
