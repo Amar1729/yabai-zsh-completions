@@ -206,7 +206,7 @@ function _yabai_space {
         --display)
             _arguments "3: :($(__display_sel))"
             ;;
-        --mirror)
+        --balance|--mirror)
             _arguments "3: :(x-axis y-axis)"
             ;;
         --rotate)
