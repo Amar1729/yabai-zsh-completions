@@ -103,6 +103,7 @@ function _yabai_config {
         "external_bar\:'Specify top and bottom padding for a potential custom bar that you may be running.'"
         "mouse_follows_focus\:'When focusing a window, put the mouse at its center.'"
         "focus_follows_mouse\:'Automatically focus the window under the mouse.'"
+        "window_origin_display\:'Specify which display a newly created window should be managed in.'"
         "window_placement\:'Specify whether managed windows should become the first or second leaf-node.'"
         "window_topmost\:'Make floating windows stay on top.'"
         "window_shadow\:'Draw shadow for windows.'"
@@ -144,6 +145,9 @@ function _yabai_config {
             ;;
         focus_follows_mouse)
             _arguments "3: :(autofocus autoraise off)"
+            ;;
+        window_origin_display)
+            _arguments "3: :(default focusd cursor)"
             ;;
         window_placement)
             _arguments "3: :(first_child second_child)"
