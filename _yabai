@@ -103,6 +103,7 @@ function _yabai_config {
         "external_bar\:'Specify top and bottom padding for a potential custom bar that you may be running.'"
         "mouse_follows_focus\:'When focusing a window, put the mouse at its center.'"
         "focus_follows_mouse\:'Automatically focus the window under the mouse.'"
+        "window_origin_display\:'Specify which display a newly created window should be managed in.'"
         "window_placement\:'Specify whether managed windows should become the first or second leaf-node.'"
         "window_topmost\:'Make floating windows stay on top.'"
         "window_shadow\:'Draw shadow for windows.'"
@@ -144,6 +145,9 @@ function _yabai_config {
             ;;
         focus_follows_mouse)
             _arguments "3: :(autofocus autoraise off)"
+            ;;
+        window_origin_display)
+            _arguments "3: :(default focusd cursor)"
             ;;
         window_placement)
             _arguments "3: :(first_child second_child)"
@@ -206,7 +210,7 @@ function _yabai_space {
         --display)
             _arguments "3: :($(__display_sel))"
             ;;
-        --mirror)
+        --balance|--mirror)
             _arguments "3: :(x-axis y-axis)"
             ;;
         --rotate)
@@ -337,25 +341,21 @@ function _yabai_signal {
             "display_moved"
             "display_resized"
             "display_changed"
-            "mouse_down"
-            "mouse_up"
-            "mouse_dragged"
-            "mouse_moved"
             "mission_control_enter"
-            "mission_control_check_for_exit"
             "mission_control_exit"
             "dock_did_restart"
-            "menu_opened"
             "menu_bar_hidden_changed"
             "dock_did_change_pref"
-            "system_woke"
             "bar_refresh"
-            "daemon_message"
         )
+
+        # possible TODO - some filters are only applicable to certain events.
+        # is it easy to check the current word (signal) and only offer relevant
+        # filters?
 
         # not going to offer completions for anything but events
         # TODO - these should each be offered only once
-        _arguments "*: :(action= label= app= title=)"
+        _arguments "*: :(action= label= app= title= active=)"
         # TODO - this completion for 'event' initially completes it as 'event\='
         _arguments "*: :_sep_parts '(event)' = '($events)'"
     elif [[ $line[3] == "--remove" ]]; then
