@@ -349,9 +349,13 @@ function _yabai_signal {
             "bar_refresh"
         )
 
+        # possible TODO - some filters are only applicable to certain events.
+        # is it easy to check the current word (signal) and only offer relevant
+        # filters?
+
         # not going to offer completions for anything but events
         # TODO - these should each be offered only once
-        _arguments "*: :(action= label= app= title=)"
+        _arguments "*: :(action= label= app= title= active=)"
         # TODO - this completion for 'event' initially completes it as 'event\='
         _arguments "*: :_sep_parts '(event)' = '($events)'"
     elif [[ $line[3] == "--remove" ]]; then
