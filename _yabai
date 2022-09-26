@@ -124,6 +124,7 @@ function _yabai_config {
         "normal_window_border_color\:'Color of the border of an unfocused window.'"
         "insert_feedback_color\:'Color of the *window --insert* message selection.'"
         "split_ratio\:'Default split ratio.'"
+        "split_type\:'Specify how a window should be split.'"
         "auto_balance\:'Balance the window tree upon change, so that all windows occupy the same area.'"
         "mouse_modifier\:'Keyboard modifier used for moving and resizing windows.'"
         "mouse_action1\:'Action performed when pressing 'mouse_modifier' + 'button1'.'"
@@ -158,6 +159,9 @@ function _yabai_config {
             ;;
         window_placement)
             _arguments "3: :(first_child second_child)"
+            ;;
+        split_type)
+            _arguments "3: :((vertical\:'The window is split along the y-axis.' horizontal\:'The window is split along the x-axis.' auto\:'The axis is determined based on width/height ratio.'))"
             ;;
         mouse_modifier)
             _arguments "3: :(cmd alt shift ctrl fn)"
