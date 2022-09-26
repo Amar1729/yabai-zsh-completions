@@ -4,7 +4,7 @@
 
 # DIR_SEL     := north | east | south | west
 # 
-# WINDOW_SEL  := prev | next | first | last | recent | mouse | largest | smallest | STACK_SEL | DIR_SEL | window id
+# WINDOW_SEL  := prev | next | first | last | recent | mouse | largest | smallest | sibling | first_nephew | second_nephew | uncle | first_cousin | second_cousin | STACK_SEL | DIR_SEL | window id
 #
 # STACK_SEL   := stack.prev | stack.next | stack.first | stack.last | stack.recent
 # 
@@ -42,6 +42,12 @@ function __window_sel {
         "mouse"
         "largest"
         "smallest"
+        "sibling"
+        "first_nephew"
+        "second_nephew"
+        "uncle"
+        "first_cousin"
+        "second_cousin"
         "$(__dir_sel)"
     )
     while read -r line || [[ -n $line ]]; do
