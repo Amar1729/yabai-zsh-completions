@@ -4,7 +4,7 @@
 
 # DIR_SEL     := north | east | south | west
 # 
-# WINDOW_SEL  := prev | next | first | last | recent | mouse | largest | smallest | STACK_SEL | DIR_SEL | window id
+# WINDOW_SEL  := prev | next | first | last | recent | mouse | largest | smallest | sibling | first_nephew | second_nephew | uncle | first_cousin | second_cousin | STACK_SEL | DIR_SEL | window id
 #
 # STACK_SEL   := stack.prev | stack.next | stack.first | stack.last | stack.recent
 # 
@@ -42,6 +42,12 @@ function __window_sel {
         "mouse"
         "largest"
         "smallest"
+        "sibling"
+        "first_nephew"
+        "second_nephew"
+        "uncle"
+        "first_cousin"
+        "second_cousin"
         "$(__dir_sel)"
     )
     while read -r line || [[ -n $line ]]; do
@@ -109,14 +115,19 @@ function _yabai_config {
         "window_shadow\:'Draw shadow for windows.'"
         "window_opacity\:'Enable opacity for windows.'"
         "window_opacity_duration\:'Duration of transition between active / normal opacity.'"
+        "window_animation_duration\:'Duration of window frame animation. If 0.0, the change in dimension is not animated.'"
         "active_window_opacity\:'Opacity of the focused window.'"
         "normal_window_opacity\:'Opacity of an unfocused window.'"
         "window_border\:'Draw border for windows.'"
+        "window_border_hidpi\:'Draw border in high resolution mode; for High Dots Per Inch (\"Retina\") displays. HiDPI uses significantly more memory.'"
+        "window_border_blur\:'Width of window border. If the given width is an odd number, it will be incremented by 1.'"
+        "window_border_radius\:'Radius of window border.'"
         "window_border_width\:'Width of window borders.'"
         "active_window_border_color\:'Color of the border of the focused window.'"
         "normal_window_border_color\:'Color of the border of an unfocused window.'"
         "insert_feedback_color\:'Color of the *window --insert* message selection.'"
         "split_ratio\:'Default split ratio.'"
+        "split_type\:'Specify how a window should be split.'"
         "auto_balance\:'Balance the window tree upon change, so that all windows occupy the same area.'"
         "mouse_modifier\:'Keyboard modifier used for moving and resizing windows.'"
         "mouse_action1\:'Action performed when pressing 'mouse_modifier' + 'button1'.'"
@@ -137,7 +148,7 @@ function _yabai_config {
 
 
     case $line[3] in
-        debug_output|mouse_follows_focus|window_topmost|window_shadow|window_opacity|window_border|auto_balance)
+        debug_output|mouse_follows_focus|window_topmost|window_shadow|window_opacity|window_border|window_border_hidpi|window_border_blur|auto_balance)
             _arguments "3: :(on off)"
             ;;
         external_bar)
@@ -151,6 +162,9 @@ function _yabai_config {
             ;;
         window_placement)
             _arguments "3: :(first_child second_child)"
+            ;;
+        split_type)
+            _arguments "3: :((vertical\:'The window is split along the y-axis.' horizontal\:'The window is split along the x-axis.' auto\:'The axis is determined based on width/height ratio.'))"
             ;;
         mouse_modifier)
             _arguments "3: :(cmd alt shift ctrl fn)"
@@ -379,9 +393,7 @@ function _yabai {
         "-m[send a message to yabai]: :"
         # {-c,--config}'[config file]: :_files'
         {-c,--config}'[config file]: :'
-        "--install-sa[install SA]"
         "--uninstall-sa[uninstall SA]"
-        "--check-sa[check SA]"
         "--load-sa[load SA]"
     )
 
