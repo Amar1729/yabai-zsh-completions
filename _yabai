@@ -379,9 +379,7 @@ function _yabai {
         "-m[send a message to yabai]: :"
         # {-c,--config}'[config file]: :_files'
         {-c,--config}'[config file]: :'
-        "--install-sa[install SA]"
         "--uninstall-sa[uninstall SA]"
-        "--check-sa[check SA]"
         "--load-sa[load SA]"
     )
 
