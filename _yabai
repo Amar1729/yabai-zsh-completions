@@ -119,6 +119,9 @@ function _yabai_config {
         "active_window_opacity\:'Opacity of the focused window.'"
         "normal_window_opacity\:'Opacity of an unfocused window.'"
         "window_border\:'Draw border for windows.'"
+        "window_border_hidpi\:'Draw border in high resolution mode; for High Dots Per Inch (\"Retina\") displays. HiDPI uses significantly more memory.'"
+        "window_border_blur\:'Width of window border. If the given width is an odd number, it will be incremented by 1.'"
+        "window_border_radius\:'Radius of window border.'"
         "window_border_width\:'Width of window borders.'"
         "active_window_border_color\:'Color of the border of the focused window.'"
         "normal_window_border_color\:'Color of the border of an unfocused window.'"
@@ -145,7 +148,7 @@ function _yabai_config {
 
 
     case $line[3] in
-        debug_output|mouse_follows_focus|window_topmost|window_shadow|window_opacity|window_border|auto_balance)
+        debug_output|mouse_follows_focus|window_topmost|window_shadow|window_opacity|window_border|window_border_hidpi|window_border_blur|auto_balance)
             _arguments "3: :(on off)"
             ;;
         external_bar)
