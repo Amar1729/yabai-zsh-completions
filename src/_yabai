@@ -117,6 +117,7 @@ function _yabai_config {
         "window_opacity\:'Enable opacity for windows.'"
         "window_opacity_duration\:'Duration of transition between active / normal opacity.'"
         "window_animation_duration\:'Duration of window frame animation. If 0.0, the change in dimension is not animated.'"
+        "window_animation_frame_rate\:'Frame rate (expressed in frames per second) of window frame animation.'"
         "active_window_opacity\:'Opacity of the focused window.'"
         "normal_window_opacity\:'Opacity of an unfocused window.'"
         "window_border\:'Draw border for windows.'"
