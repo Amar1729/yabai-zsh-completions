@@ -111,6 +111,7 @@ function _yabai_config {
         "focus_follows_mouse\:'Automatically focus the window under the mouse.'"
         "window_origin_display\:'Specify which display a newly created window should be managed in.'"
         "window_placement\:'Specify whether managed windows should become the first or second leaf-node.'"
+        "window_zoom_persist\:'Windows will keep their zoom-state through layout changes.'"
         "window_topmost\:'Make floating windows stay on top.'"
         "window_shadow\:'Draw shadow for windows.'"
         "window_opacity\:'Enable opacity for windows.'"
@@ -148,7 +149,7 @@ function _yabai_config {
 
 
     case $line[3] in
-        debug_output|mouse_follows_focus|window_topmost|window_shadow|window_opacity|window_border|window_border_hidpi|window_border_blur|auto_balance)
+        debug_output|mouse_follows_focus|window_zoom_persist|window_topmost|window_shadow|window_opacity|window_border|auto_balance)
             _arguments "3: :(on off)"
             ;;
         external_bar)
