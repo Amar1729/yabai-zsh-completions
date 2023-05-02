@@ -3,25 +3,25 @@
 # ---- selectors ----
 
 # DIR_SEL     := north | east | south | west
-# 
+#
 # WINDOW_SEL  := prev | next | first | last | recent | mouse | largest | smallest | sibling | first_nephew | second_nephew | uncle | first_cousin | second_cousin | STACK_SEL | DIR_SEL | window id
 #
 # STACK_SEL   := stack.prev | stack.next | stack.first | stack.last | stack.recent
-# 
+#
 # DISPLAY_SEL := prev | next | first | last | recent | mouse | arrangement index (1-based)
-# 
+#
 # SPACE_SEL   := prev | next | first | last | recent | mouse | mission-control index (1-based) | LABEL
-# 
+#
 # LAYER       := below | normal | above
-# 
+#
 # FLOAT_SEL   := 0 < value <= 1.0
-# 
+#
 # BOOL_SEL    := on | off
-# 
+#
 # COLOR       := #AARRGGBB
-# 
+#
 # REGEX       := POSIX extended regular expression syntax
-# 
+#
 # LABEL       := arbitrary string/text used as an identifier
 
 function __dir_sel {
@@ -151,7 +151,7 @@ function _yabai_config {
 
     case $line[3] in
         debug_output|mouse_follows_focus|window_zoom_persist|window_topmost|window_shadow|window_opacity|window_border|auto_balance)
-            _arguments "3: :(on off)"
+            _arguments "3: :($(__bool_sel))"
             ;;
         external_bar)
             _arguments "3: :(main: all: off:)"
