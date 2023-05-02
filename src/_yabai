@@ -397,6 +397,11 @@ function _yabai {
         {-c,--config}'[config file]: :'
         "--uninstall-sa[uninstall SA]"
         "--load-sa[load SA]"
+        "--install-service"
+        "--uninstall-service"
+        "--start-service"
+        "--restart-service"
+        "--stop-service"
     )
 
     if [[ ${#words[@]} -lt 3 ]]; then
