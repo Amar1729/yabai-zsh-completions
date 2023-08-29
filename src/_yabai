@@ -274,6 +274,7 @@ function _yabai_window {
         "--focus\:'Focus the given window.'"
         "--swap\:'Swap position of the selected window and the given window.'"
         "--warp\:'Re-insert the selected window, splitting the given window.'"
+        "--stack\:'Stack the given window on top of the selected window.'"
         "--insert\:'Set the splitting area of the selected window. +'"
         "--grid\:'Set the frame of the selected window based on a self-defined grid.'"
         "--move\:'If type is 'rel' the selected window is moved by 'dx' pixels horizontally and 'dy' pixels vertically, otherwise 'dx' and 'dy' will become its new position.'"
@@ -291,7 +292,7 @@ function _yabai_window {
     _arguments "2: :(($args))"
 
     case $line[3] in
-        --focus|--swap|--warp|--insert|--grid|--move|--resize|--ratio|--toggle|--layer|--display|--space|--close)
+        --focus|--swap|--warp|--stack|--insert|--grid|--move|--resize|--ratio|--toggle|--layer|--display|--space|--close)
             _yabai_window_inner 3
             ;;
         *)
