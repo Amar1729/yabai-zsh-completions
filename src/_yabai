@@ -352,7 +352,9 @@ function _yabai_signal {
             "window_minimized"
             "window_deminimized"
             "window_title_changed"
+            "space_created"
             "space_changed"
+            "space_destroyed"
             "display_added"
             "display_removed"
             "display_moved"
@@ -403,6 +405,8 @@ function _yabai {
         "--start-service"
         "--restart-service"
         "--stop-service"
+        "-h[help]"
+        "--help"
     )
 
     if [[ ${#words[@]} -lt 3 ]]; then
