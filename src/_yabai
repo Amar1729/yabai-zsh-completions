@@ -405,6 +405,8 @@ function _yabai {
         "--start-service"
         "--restart-service"
         "--stop-service"
+        "-h[help]"
+        "--help"
     )
 
     if [[ ${#words[@]} -lt 3 ]]; then
