@@ -112,7 +112,6 @@ function _yabai_config {
         "window_origin_display\:'Specify which display a newly created window should be managed in.'"
         "window_placement\:'Specify whether managed windows should become the first or second leaf-node.'"
         "window_zoom_persist\:'Windows will keep their zoom-state through layout changes.'"
-        "window_topmost\:'Make floating windows stay on top.'"
         "window_shadow\:'Draw shadow for windows.'"
         "window_opacity\:'Enable opacity for windows.'"
         "window_opacity_duration\:'Duration of transition between active / normal opacity.'"
@@ -120,13 +119,6 @@ function _yabai_config {
         "window_animation_frame_rate\:'Frame rate (expressed in frames per second) of window frame animation.'"
         "active_window_opacity\:'Opacity of the focused window.'"
         "normal_window_opacity\:'Opacity of an unfocused window.'"
-        "window_border\:'Draw border for windows.'"
-        "window_border_hidpi\:'Draw border in high resolution mode; for High Dots Per Inch (\"Retina\") displays. HiDPI uses significantly more memory.'"
-        "window_border_blur\:'Width of window border. If the given width is an odd number, it will be incremented by 1.'"
-        "window_border_radius\:'Radius of window border.'"
-        "window_border_width\:'Width of window borders.'"
-        "active_window_border_color\:'Color of the border of the focused window.'"
-        "normal_window_border_color\:'Color of the border of an unfocused window.'"
         "insert_feedback_color\:'Color of the *window --insert* message selection.'"
         "split_ratio\:'Default split ratio.'"
         "split_type\:'Specify how a window should be split.'"
@@ -150,7 +142,7 @@ function _yabai_config {
 
 
     case $line[3] in
-        debug_output|mouse_follows_focus|window_zoom_persist|window_topmost|window_shadow|window_opacity|window_border|auto_balance)
+        debug_output|mouse_follows_focus|window_zoom_persist|window_shadow|window_opacity|auto_balance)
             _arguments "3: :($(__bool_sel))"
             ;;
         external_bar)
@@ -255,7 +247,7 @@ function _yabai_window_inner {
             _arguments "$idx: :(top: left: bottom: right: top_left: top_right: bottom_right: bottom_left: abs:)"
             ;;
         --toggle)
-            _arguments "$idx: :(float sticky topmost pip shadow split border zoom-parent zoom-fullscreen native-fullscreen expose)"
+            _arguments "$idx: :(float sticky pip shadow split zoom-parent zoom-fullscreen native-fullscreen expose)"
             ;;
         --layer)
             _arguments "$idx: :($(__layer))"
@@ -340,8 +332,6 @@ function _yabai_signal {
             "application_launched"
             "application_terminated"
             "application_front_switched"
-            "application_activated"
-            "application_deactivated"
             "application_visible"
             "application_hidden"
             "window_created"
