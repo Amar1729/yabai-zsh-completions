@@ -212,10 +212,10 @@ function _yabai_space {
     _arguments "2: :(($args))"
 
     case $line[3] in
-        --focus|--move|--swap)
+        --destroy|--focus|--move|--swap)
             _arguments "3: :($(__space_sel))"
             ;;
-        --display)
+        --create|--display)
             _arguments "3: :($(__display_sel))"
             ;;
         --balance|--mirror)
